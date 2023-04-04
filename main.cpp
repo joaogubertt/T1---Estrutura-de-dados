@@ -1,11 +1,13 @@
 #include <iostream>
 #include <locale.h>
 #include <conio.h>
+#include <string.h>
 
 using namespace std;
 
 struct No{
-    int e, k;
+    int e;
+    float k;
     No *eloA, *eloP;
 };
 
@@ -35,7 +37,7 @@ void mostrarLDE(LDE lista, char frase[]){
     cout << endl;
 }
 
-bool inserirLDE( LDE &lista, int constante, int expoente){
+bool inserirLDE( LDE &lista, float constante, int expoente){
     No *novo = new No;
 
     if( novo == NULL ) return false;
@@ -78,16 +80,6 @@ bool inserirLDE( LDE &lista, int constante, int expoente){
     return true;
 }
 
-//Confere o expoente a partir do segundo item 
-bool conferirExpoente( LDE lista, int expoente ){
-    No *aux = lista.comeco->eloP;
-    while( aux != NULL ){
-        if( aux->e == expoente ) return true;
-        aux = aux->eloP;
-    }
-    return false;
-}
-
 No *buscarLDE( LDE lista, int expoente ){
     No *aux = lista.comeco;
     while( aux != NULL ){
@@ -121,19 +113,25 @@ bool retirarLDE( LDE &lista, int expoente ){
     return true;
 }
 
-No *soma (int e1, int e2, int k1, int k2)
+float soma(float k1, float k2)
 {
-    //Verificação de expoente necessita ser enquanto se percorre a lista
-    No* aux = new No;
-    if(aux = NULL) return NULL;
-    aux->k = k1 + k2;
+    float aux;
+    aux = k1 + k2;
     return aux;
 }
 
-void lerPolinomios(LDE &lista)
+float sub(float k1, float k2)
+{
+    float aux;
+    aux = k1 - k2;
+    return aux;
+}
+
+void lerPolinomios(LDE &lista) // Função que irá receber os valores da constante e do expoente e armazenará em uma LDE
 {
     char tecla;
-    int k, e, cont;
+    int e, cont;
+    float k;
     cont = 0;
 
     do {
@@ -151,36 +149,43 @@ void lerPolinomios(LDE &lista)
     } while(tecla != 27); cout << cont;
 }
 
-
-//O problema está aqui - > antes de salvar mudei o tipo de retorno e com isso espero criar uma nova lista onde coloco os resultados.
-LDE realizarOperacaoSoma(LDE lista)
+bool realizarOperacaoSoma(LDE lista, LDE& resultado)
 {
-    No* aux = new No;
-    if (aux == NULL)
-    {
-        return;
+    inicializarLDE(resultado);
+    No* aux = lista.comeco;
+    while (aux != NULL) {
+        if (buscarLDE(lista, aux->e) != NULL) {
+            No* aux1 = new No;
+            if (aux1 == NULL) return false;
+            aux1->e = aux->e;
+            aux1->k = 0;
+            No* aux2 = buscarLDE(lista, aux->e);
+            while (aux2 != NULL) {
+                aux1->k += soma(aux2->k, aux2->eloP->k);
+                aux2 = aux2->eloP->eloP; // atualiza o ponteiro para o próximo nó com o mesmo expoente
+            }
+            inserirLDE(resultado, aux1->k, aux1->e);
+            delete aux1;
+        }
+        aux = aux->eloP; // atualiza o ponteiro para o próximo nó fora do loop interno
     }
-    aux = lista.comeco;
-    while(aux->eloP != NULL)
-    {
-       if(conferirExpoente(lista, aux->e))
-       {
-        aux->eloP = soma(aux->e, aux->eloP->e, aux->k, aux->eloP->k);
-        delete(lista.comeco);
-        lista.comeco = aux->eloP;
-       }
-    }
-
+    return true;
 }
 
 int main(){
     setlocale(LC_ALL, "Portuguese");
 
-    LDE lista1;
+    LDE lista1, listaOP;
     inicializarLDE(lista1);
-    lerPolinomios(lista1);
-    //realizarOperacaoSoma(lista1);
+    //lerPolinomios(lista1); 
+    inserirLDE(lista1, 2, 4);
+    inserirLDE(lista1, 2, 3);
+    inserirLDE(lista1, 2, 6);
+    inserirLDE(lista1, 3, 2);
+    inserirLDE(lista1, 4, 2);
+    inserirLDE(lista1, 2, 4);
+    realizarOperacaoSoma(lista1, listaOP);
     mostrarLDE(lista1, "Polinomio");
-
+    mostrarLDE(listaOP, "Polinomios Soma");
     return 0;
 }
