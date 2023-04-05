@@ -150,41 +150,38 @@ void lerPolinomios(LDE& lista) // Função que irá receber os valores da consta
     } while (tecla != 27); cout << cont;
 }
 
-LDE somaPolinomio(LDE lista1, LDE lista2) {
+LDE somaPolinomio(LDE lista) {
     LDE novaLista;
     inicializarLDE(novaLista);
 
-    No* adicionarALista = lista2.comeco;
-    while (adicionarALista != NULL)
-    {
-        inserirLDE(lista1, adicionarALista->k, adicionarALista->e);
-        adicionarALista = adicionarALista->eloP;
-    }
+    No* aux1 = lista.comeco;
+    No* aux2;
 
-    No* aux = lista1.comeco;
+    while (aux1 != NULL) {
+        aux2 = buscarLDE(novaLista, aux1->e);
 
-    while (aux != NULL) {
-        No* temp = buscarLDE(novaLista, aux->e);
-
-        if (temp == NULL) {
-            inserirLDE(novaLista, aux->k, aux->e);
-        }
-        else {
-            temp->k = soma(temp->k, aux->k);
+        if (aux2 != NULL) {
+            aux2->k += aux1->k;
+        } else {
+            inserirLDE(novaLista, aux1->k, aux1->e);
         }
 
-        aux = aux->eloP;
+        aux1 = aux1->eloP;
     }
 
     return novaLista;
 }
-// lista1 terá o valor subtraído por lista2
+
+
 LDE subPolinomios(LDE lista1, LDE lista2) {
-    LDE resultado;
+    LDE resultado, lista1aux, lista2aux;
     inicializarLDE(resultado);
 
-    No* aux1 = lista1.comeco;
-    No* aux2 = lista2.comeco;
+    lista1aux = somaPolinomio(lista1);
+    lista2aux = somaPolinomio(lista2);
+
+    No* aux1 = lista1aux.comeco;
+    No* aux2 = lista2aux.comeco;
 
     while (aux1 != NULL && aux2 != NULL) { //percorrendo as duas listas simultaneamentes até que as duas estejam vazias
         if (aux1->e == aux2->e) { // se os expoentes em ambas listas forem iguais
@@ -231,40 +228,36 @@ int main() {
     //Ainda falta utilizar um leitor de Polinomio diferente do meu, pois não funciona, nele deve haver a inicialização
     // da lista que for inserido, tudo isso para abstrair o máximo de linhas de código.
 
-    LDE lista1, lista2, lista3, lista4, listaSUB, listaSOMA;
-    inicializarLDE(listaSUB);
-    inicializarLDE(listaSOMA);
+    LDE lista1, listaSOMA, lista2, lista3, listaSUB;
     inicializarLDE(lista1);
     inicializarLDE(lista2);
     inicializarLDE(lista3);
-    inicializarLDE(lista4);
-
-
-    //lerPolinomios(lista1);
-    //SUB
-    inserirLDE(lista1, 5, 2);
-    inserirLDE(lista1, -9, 1);
-    inserirLDE(lista1, -8, 0);
-    mostrarLDE(lista1, "Polinomio 1");
-    inserirLDE(lista2, -3, 2);
-    inserirLDE(lista2, 10, 1);
-    inserirLDE(lista2, -6, 0);
-    mostrarLDE(lista2, "Polinomio 2");
-    listaSUB = subPolinomios(lista1, lista2);
-    mostrarLDE(listaSUB, "Resultado");
-    
-    
-    //SOMA
-    inserirLDE(lista3, 1, 2);
-    inserirLDE(lista3, - 3, 1);
-    inserirLDE(lista3, -1, 0);
-    inserirLDE(lista4, -3, 2);
-    inserirLDE(lista4, 8, 1);
-    inserirLDE(lista4, -6, 0);
     cout << endl;
-    mostrarLDE(lista3, "Polinomio 1");
-    mostrarLDE(lista4, "Polinomio 2");
-    listaSOMA = somaPolinomio(lista3, lista4);
-    mostrarLDE(listaSOMA, "Resultado soma");
+    //SOMA
+    inserirLDE(lista1, 1, 2);
+    inserirLDE(lista1, -3, 1);
+    inserirLDE(lista1, -1, 0);
+    inserirLDE(lista1, -3, 2);
+    inserirLDE(lista1, 8, 1);
+    inserirLDE(lista1, -6, 0);
+    mostrarLDE(lista1, "Polinomios a serem somados");
+    listaSOMA = somaPolinomio(lista1);
+    mostrarLDE(listaSOMA, "Polinomio Somado:");
+    cout << endl;
+
+    inserirLDE(lista2, 5, 2);
+    inserirLDE(lista2, -9, 1);
+    inserirLDE(lista2, -8, 0);
+    inserirLDE(lista2, -3, 2);
+    mostrarLDE(lista2, "1o Polinomio sub");
+    inserirLDE(lista3, -3, 2);
+    inserirLDE(lista3, 8, 1);
+    inserirLDE(lista3, -6, 0);
+    mostrarLDE(lista3, "2o Polinomio sub");
+    listaSUB = subPolinomios(lista2, lista3);
+    mostrarLDE(listaSUB, "Resultado subtraído");
+    cout << endl;
+
+
     return 0;
 }
