@@ -1,0 +1,3 @@
+1 - Fazer multiplicação substituindo x e fazendo potenciação.
+2 - Organizar um menu bonitinho.
+3 - Organizar e prototipar funções.
