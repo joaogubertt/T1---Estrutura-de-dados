@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <Windows.h>
+#include <math.h>
 //Falta multiplicar por escalar e multiplicar pôlinomios
 using namespace std;
 
@@ -16,11 +17,96 @@ struct LDE {
     No* comeco, * fim;
 };
 
+//Funções e definições
+
+//Inicializa a lista setando os valores de lista.comeco e lista.fim
+void inicializarLDE(LDE& lista);
+// percorre a lista ao contrário para deixar o que for de maior grau pela frente
+void mostrarLDE(LDE lista, string frase);
+//Insere normalmente na LDE, só que insere dois insere dois índices, para a constante e outro para o expoente
+bool inserirLDE(LDE& lista, float constante, int expoente);
+//Retorna um nó onde o indice de expoente do parâmetro seja igual
+No* buscarLDE(LDE lista, int expoente);
+//retira o item da lista onde o expoente seja o desejado;
+bool retirarLDE(LDE& lista, int expoente);
+//Função simples de soma para utilizar nos indices K
+float soma(float k1, float k2);
+//Função simples de subtração para utilizar nos indices K
+float sub(float k1, float k2);
+// Função que executará o menu, dando opções ao usuário
+void menu();
+//potenciação simples
+float exponenciacao(float base, int expoente);
+//Multiplica os indices K por uma constante !IMPORTANTE, ALTERA A PRÓPRIA LISTA.
+void multiplicarPorEscalar(LDE& lista, int x);
+//Lê apenas uma lista de polinômios para soma, escalar e valor numérico
+void lerPolinomioUmaLista(LDE& lista);
+//Lê duas listas para qualquer outro tipo de operação - sub e multiplicação de polinomios 
+void lerPolinomioDuasListas(LDE& lista, LDE& lista1);
+//Soma o indice K e mantem o E
+LDE somaExp(LDE lista);
+//Subtrai o indice K e mantem o E
+LDE subPolinomios(LDE lista1, LDE lista2);
+//multiplica um polinômio por outro
+LDE produtoPolinomio(LDE lista1, LDE lista2);
+//substitui o valor de x, potencia esse valor pelo indice e para depois multiplicar por E
+float valorNumerico(LDE lista, float x);
+
+int main() {
+    setlocale(LC_ALL, "Portuguese");
+    /*
+    LDE lista1, lista, lista2, lista3, listaSUB;
+    float valNum;
+    //INICIALIZANDO TODAS AS LISTAS QUE NECESSITAM DE INICIALIZAÇÃO
+    inicializarLDE(lista); inicializarLDE(lista1); inicializarLDE(lista2); inicializarLDE(lista3);
+    //CHAMA FUNÇÃO QUE IRÁ INSERIR EM LISTA OS POLINÔMIOS - PARA SOMA
+     //lerPolinomioUmaLista(lista); //descomentar
+     //mostrarLDE(lista, "Polinomios a serem somados");
+     //listaSOMA = somaExp(lista);
+     //mostrarLDE(listaSOMA, "Polinomio Somado:");
+    cout << endl;
+    // multiplicarPorEscalar(lista, 2);
+    mostrarLDE(lista, "Multiplicacao por escalar");
+    //lerPolinomioDuasListas(lista2, lista3);
+    mostrarLDE(lista2, "1o Polinomio sub");
+    mostrarLDE(lista3, "2o Polinomio sub");
+    //listaSUB = subPolinomios(lista2, lista3);
+    listaSUB = produtoPolinomio(lista2, lista3);
+    mostrarLDE(listaSUB, "Resultado subtraido");
+    cout << endl;
+    //valnum = valorNumerico(lista, 2.0);
+    //cout << endl << "Valor numerico = " << valnum;
+    inserirLDE(lista1, 2, 2);
+    inserirLDE(lista1, 3, 3);
+    valNum = valorNumerico(lista1, 2);
+    cout << "Valor numérico do polinomio: " << valNum << endl; */
+    menu();
+
+    return 0;
+}
+
+
+//SOMA
+//inserirLDE(lista, 2, 2);
+//inserirLDE(lista, -3, 1);
+//inserirLDE(lista, -1, 0);
+//inserirLDE(lista, -3, 2);
+//inserirLDE(lista, 8, 1);
+//inserirLDE(lista, -6, 0);
+
+/*SUB
+inserirLDE(lista2, 5, 2);
+inserirLDE(lista2, -9, 1);
+inserirLDE(lista2, -8, 0);
+inserirLDE(lista2, -3, 2);
+inserirLDE(lista3, -3, 2);
+inserirLDE(lista3, 8, 1);
+inserirLDE(lista3, -6, 0);*/
+
 void inicializarLDE(LDE& lista) {
     lista.comeco = NULL;
     lista.fim = NULL;
 }
-
 
 void mostrarLDE(LDE lista, string frase)
 {
@@ -131,30 +217,148 @@ float sub(float k1, float k2)
     return aux;
 }
 
-//void menu()
+void menu() 
+{
+    LDE lista1, lista2, listaOP;
+    inicializarLDE(lista1); inicializarLDE(lista2);
+    int escolha = 0, xEscalar = 0, desejo = 0;
+    float valNum = 0, vNEscolha = 0;
 
-double exponenciacao(double base, int expoente) {
-    double resultado = 1;
+    cout << "+-------------------------------------------------------------+" << endl;
+    cout << "|                                                             |" << endl;
+    cout << "|                                                             |" << endl;
+    cout << "|                                                             |" << endl;
+    cout << "|                  CALCULADORA DE POLINOMIOS                  |" << endl;
+    cout << "|                       By: Jpg e Pz                          |" << endl;
+    cout << "|                                                             |" << endl;
+    cout << "|                                                             |" << endl;
+    cout << "|                                                             |" << endl;
+    cout << "+------------------------------------------------------------ +" << endl;
+    Sleep(5000);
+    system("cls");
+
+    do
+    {
+        cout << "+-------------------------------------------------------------+" << endl;
+        cout << "|                                                             |" << endl;
+        cout << "|                  ESCOLHA A OPCAO DESEJADA:                  |" << endl;
+        cout << "|                       1- SOMA                               |" << endl;
+        cout << "|                      2- SUBTRACAO                           |" << endl;
+        cout << "|                3- MULTIPLICACAO POR ESCALAR                 |" << endl;
+        cout << "|                    4- VALOR NUMERICO                        |" << endl;
+        cout << "|               5- MULTIPLICACAO DE POLINOMIO                 |" << endl;
+        cout << "|                                                             |" << endl;
+        cout << "+------------------------------------------------------------ +" << endl;
+        cin >> escolha;
+        system("cls");
+    } while (escolha > 5 || escolha <= 0);
+
+    switch (escolha)
+    {
+    case 1: //SOMA
+        lerPolinomioUmaLista(lista1);
+        mostrarLDE(lista1, "Polinomios a serem somados");
+        listaOP = somaExp(lista1);
+        cout << endl;
+        mostrarLDE(listaOP, "Resultado Soma");
+        break;
+    case 2: // SUB
+        lerPolinomioDuasListas(lista1, lista2);
+        mostrarLDE(lista1, "1o Polinomio sub");
+        mostrarLDE(lista2, "2o Polinomio sub");
+        cout << endl;
+        listaOP = subPolinomios(lista1, lista2);
+        mostrarLDE(listaOP, "Resultado Sub");
+        break;
+    case 3: //Escalar
+        cout << "+-------------------------------------------------------------+" << endl;
+        cout << "|                                                             |" << endl;
+        cout << "|                                                             |" << endl;
+        cout << "|                                                             |" << endl;
+        cout << "|                  ENTRE COM UM VALOR PARA A                  |" << endl;
+        cout << "|                       MULTIPLICACAO                         |" << endl;
+        cout << "|                                                             |" << endl;
+        cout << "|                                                             |" << endl;
+        cout << "|                                                             |" << endl;
+        cout << "+------------------------------------------------------------ +" << endl;
+        cin >> xEscalar;
+        system("cls");
+        lerPolinomioUmaLista(lista1);
+        mostrarLDE(lista1, "Polinomio a ser multiplicado");
+        cout << "Escalar que irá multiplicar: " << xEscalar;
+        multiplicarPorEscalar(lista1, xEscalar);
+        cout << endl;
+        mostrarLDE(lista1, "Resultado multiplicacao por escalar");
+        break;
+    case 4: // VALOR NUMERICO
+        cout << "+-------------------------------------------------------------+" << endl;
+        cout << "|                                                             |" << endl;
+        cout << "|                                                             |" << endl;
+        cout << "|                                                             |" << endl;
+        cout << "|                  ENTRE COM UM VALOR PARA A                  |" << endl;
+        cout << "|                        A VARIAVEL X                         |" << endl;
+        cout << "|                                                             |" << endl;
+        cout << "|                                                             |" << endl;
+        cout << "|                                                             |" << endl;
+        cout << "+------------------------------------------------------------ +" << endl;
+        cin >> vNEscolha;
+        system("cls");
+        lerPolinomioUmaLista(lista1);
+        mostrarLDE(lista1, "Polinomio recebido");
+        cout << "Valor de X" << vNEscolha;
+        valNum = valorNumerico(lista1, vNEscolha);
+        cout << endl << "Valor numerico do polinomio eh igual a " << valNum;
+        break;
+    default: //MULTIPLICACAO DE POLINOMIO
+        lerPolinomioDuasListas(lista1, lista2);
+        mostrarLDE(lista1, "1o polinomio para multiplicacao");
+        mostrarLDE(lista2, "2o polinomio para multiplicacao");
+        listaOP = produtoPolinomio(lista1, lista2);
+        mostrarLDE(listaOP, "Resultado produto dos polinomios");
+        break;
+    }
+    Sleep(10000);
+    system("cls");
+    cout << "+-------------------------------------------------------------+" << endl;
+    cout << "|                                                             |" << endl;
+    cout << "|                                                             |" << endl;
+    cout << "|                                                             |" << endl;
+    cout << "|                DESEJA REALIZAR OUTRA CONTA?                 |" << endl;
+    cout << "|                     1- Sim || 2 - Nao                       |" << endl;
+    cout << "|                                                             |" << endl;
+    cout << "|                                                             |" << endl;
+    cout << "|                                                             |" << endl;
+    cout << "+------------------------------------------------------------ +" << endl;
+    cin >> desejo;
+    if (desejo == 1)
+    {
+        system("cls");
+        menu();
+    }
+}
+
+float exponenciacao(float base, int expoente) {
+    float resultado = 1;
     for (int i = 0; i < expoente; i++) {
         resultado *= base;
     }
     return resultado;
 }
 
-// Multiplicação por escalar, onde uma constante multiplica todas os indices K do Nó
 void multiplicarPorEscalar(LDE& lista, int x) {
     No* aux = lista.comeco;
 
-    while (aux != NULL) {
-        if(aux->e != 0)
+    while (aux != NULL)
+    {
+        if (aux->e != 0)
+        {
             aux->k *= x;
             aux = aux->eloP;
+        }
     }
 }
 
-
-// Função que irá receber os valores da constante e do expoente PARA SOMA e armazenará em uma LDE
-void lerPolinomiosSoma(LDE& lista) 
+void lerPolinomioUmaLista(LDE& lista)
 {
     int e, flag = 1, cont = 0;
     float k;
@@ -185,10 +389,10 @@ void lerPolinomiosSoma(LDE& lista)
         cout << "|                                                             |" << endl;
         cout << "|                                                             |" << endl;
         cout << "|                                                             |" << endl;
-        cout << "+------------------------------------------------------------ +" << endl; 
+        cout << "+------------------------------------------------------------ +" << endl;
         cin >> k;
         system("cls");
-        
+
         cout << "+-------------------------------------------------------------+" << endl;
         cout << "|                                                             |" << endl;
         cout << "|                                                             |" << endl;
@@ -198,12 +402,12 @@ void lerPolinomiosSoma(LDE& lista)
         cout << "|                                                             |" << endl;
         cout << "|                                                             |" << endl;
         cout << "|                                                             |" << endl;
-        cout << "+------------------------------------------------------------ +" << endl; 
+        cout << "+------------------------------------------------------------ +" << endl;
         cin >> e;
         system("cls");
 
         inserirLDE(lista, k, e);
-        
+
         cout << "+-------------------------------------------------------------+" << endl;
         cout << "|                                                             |" << endl;
         cout << "|                                                             |" << endl;
@@ -220,7 +424,7 @@ void lerPolinomiosSoma(LDE& lista)
     } while (flag != 0);
 }
 
-void lerPolinomiosSub(LDE& lista, LDE& lista1)
+void lerPolinomioDuasListas(LDE& lista, LDE& lista1)
 {
     int e, flag = 1;
     float k;
@@ -237,7 +441,7 @@ void lerPolinomiosSub(LDE& lista, LDE& lista1)
     Sleep(5000);
     system("cls");
     do
-    { 
+    {
         cout << "+-------------------------------------------------------------+" << endl;
         cout << "|                                                             |" << endl;
         cout << "|                                                             |" << endl;
@@ -280,7 +484,7 @@ void lerPolinomiosSub(LDE& lista, LDE& lista1)
         system("cls");
     } while (flag != 0);
 
-    flag = 1; 
+    flag = 1;
 
 
     cout << "+------------------------------------------------------------ +" << endl;
@@ -297,52 +501,51 @@ void lerPolinomiosSub(LDE& lista, LDE& lista1)
 
     do
     {
-    cout << "+-------------------------------------------------------------+" << endl;
-    cout << "|                                                             |" << endl;
-    cout << "|                                                             |" << endl;
-    cout << "|                                                             |" << endl;
-    cout << "|                    Digite a constante:                      |" << endl;
-    cout << "|                                                             |" << endl;
-    cout << "|                                                             |" << endl;
-    cout << "|                                                             |" << endl;
-    cout << "|                                                             |" << endl;
-    cout << "+------------------------------------------------------------ +" << endl;
-    
-    cin >> k;
-    system("cls");
+        cout << "+-------------------------------------------------------------+" << endl;
+        cout << "|                                                             |" << endl;
+        cout << "|                                                             |" << endl;
+        cout << "|                                                             |" << endl;
+        cout << "|                    Digite a constante:                      |" << endl;
+        cout << "|                                                             |" << endl;
+        cout << "|                                                             |" << endl;
+        cout << "|                                                             |" << endl;
+        cout << "|                                                             |" << endl;
+        cout << "+------------------------------------------------------------ +" << endl;
 
-    cout << "+-------------------------------------------------------------+" << endl;
-    cout << "|                                                             |" << endl;
-    cout << "|                                                             |" << endl;
-    cout << "|                                                             |" << endl;
-    cout << "|                     Digite o expoente:                      |" << endl;
-    cout << "|                                                             |" << endl;
-    cout << "|                                                             |" << endl;
-    cout << "|                                                             |" << endl;
-    cout << "|                                                             |" << endl;
-    cout << "+------------------------------------------------------------ +" << endl;
-    cin >> e;
-    system("cls");
+        cin >> k;
+        system("cls");
 
-    inserirLDE(lista1, k, e);
+        cout << "+-------------------------------------------------------------+" << endl;
+        cout << "|                                                             |" << endl;
+        cout << "|                                                             |" << endl;
+        cout << "|                                                             |" << endl;
+        cout << "|                     Digite o expoente:                      |" << endl;
+        cout << "|                                                             |" << endl;
+        cout << "|                                                             |" << endl;
+        cout << "|                                                             |" << endl;
+        cout << "|                                                             |" << endl;
+        cout << "+------------------------------------------------------------ +" << endl;
+        cin >> e;
+        system("cls");
 
-    cout << "+-------------------------------------------------------------+" << endl;
-    cout << "|                                                             |" << endl;
-    cout << "|                                                             |" << endl;
-    cout << "|                                                             |" << endl;
-    cout << "|           Deseja inserir mais algum polinomio ?             |" << endl;
-    cout << "|                   1 - Sim || 0 - Nao                        |" << endl;
-    cout << "|                                                             |" << endl;
-    cout << "|                                                             |" << endl;
-    cout << "|                                                             |" << endl;
-    cout << "+------------------------------------------------------------ +" << endl;
-    cin >> flag;
-    system("cls");
+        inserirLDE(lista1, k, e);
+
+        cout << "+-------------------------------------------------------------+" << endl;
+        cout << "|                                                             |" << endl;
+        cout << "|                                                             |" << endl;
+        cout << "|                                                             |" << endl;
+        cout << "|           Deseja inserir mais algum polinomio ?             |" << endl;
+        cout << "|                   1 - Sim || 0 - Nao                        |" << endl;
+        cout << "|                                                             |" << endl;
+        cout << "|                                                             |" << endl;
+        cout << "|                                                             |" << endl;
+        cout << "+------------------------------------------------------------ +" << endl;
+        cin >> flag;
+        system("cls");
 
     } while (flag != 0);
-   
-}
 
+}
 
 LDE somaExp(LDE lista) {
     LDE novaLista;
@@ -366,7 +569,6 @@ LDE somaExp(LDE lista) {
 
     return novaLista;
 }
-
 
 LDE subPolinomios(LDE lista1, LDE lista2) {
     LDE resultado, lista1aux, lista2aux;
@@ -450,54 +652,15 @@ LDE produtoPolinomio(LDE lista1, LDE lista2) {
     return novaLista;
 }
 
+float valorNumerico(LDE lista, float x) {
+    float valNum = 0, exp, k;
+    No* aux = lista.comeco;
+    while (aux != NULL) {
+        exp = pow(x, aux->e);
+        k = aux->k * exp;
+        valNum += k;
+        aux = aux->eloP;
+    }
 
-
-int main() {
-    setlocale(LC_ALL, "Portuguese");
-
-    //Ainda falta utilizar um leitor de Polinomio diferente do meu, pois não funciona, nele deve haver a inicialização
-    // da lista que for inserido, tudo isso para abstrair o máximo de linhas de código.
-    LDE lista1, lista, listaSOMA, lista2, lista3, listaSUB;
-    //INICIALIZANDO TODAS AS LISTAS QUE NECESSITAM DE INICIALIZAÇÃO
-    inicializarLDE(lista); inicializarLDE(lista1); inicializarLDE(lista2); inicializarLDE(lista3);
-    
-   //CHAMA FUNÇÃO QUE IRÁ INSERIR EM LISTA OS POLINÔMIOS - PARA SOMA
-    //lerPolinomiosSoma(lista); descomentar
-    mostrarLDE(lista, "Polinomios a serem somados");
-    listaSOMA = somaExp(lista);
-    mostrarLDE(listaSOMA, "Polinomio Somado:");
-    cout << endl;
-
-
-    // multiplicarPorEscalar(lista, 2);
-    mostrarLDE(lista, "Multiplicacao por escalar");
-
-
-    lerPolinomiosSub(lista2, lista3);
-    mostrarLDE(lista2, "1o Polinomio sub");
-    mostrarLDE(lista3, "2o Polinomio sub");
-    //listaSUB = subPolinomios(lista2, lista3);
-
-    listaSUB = produtoPolinomio(lista2, lista3);
-    mostrarLDE(listaSUB, "Resultado subtraído");
-    cout << endl;
-    return 0;
+    return valNum;
 }
-
-
-//SOMA
-//inserirLDE(lista, 2, 2);
-//inserirLDE(lista, -3, 1);
-//inserirLDE(lista, -1, 0);
-//inserirLDE(lista, -3, 2);
-//inserirLDE(lista, 8, 1);
-//inserirLDE(lista, -6, 0);
-
-/*SUB
-inserirLDE(lista2, 5, 2);
-inserirLDE(lista2, -9, 1);
-inserirLDE(lista2, -8, 0);
-inserirLDE(lista2, -3, 2);
-inserirLDE(lista3, -3, 2);
-inserirLDE(lista3, 8, 1);
-inserirLDE(lista3, -6, 0);*/
