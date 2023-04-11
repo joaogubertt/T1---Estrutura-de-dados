@@ -41,12 +41,14 @@ float exponenciacao(float base, int expoente);
 void multiplicarPorEscalar(LDE& lista, int x);
 //Lê apenas uma lista de polinômios para soma, escalar e valor numérico
 void lerPolinomioUmaLista(LDE& lista);
-//Lê duas listas para qualquer outro tipo de operação - sub e multiplicação de polinomios 
+//Lê duas listas para qualquer outro tipo de operação - sub e multiplicação de polinomios
 void lerPolinomioDuasListas(LDE& lista, LDE& lista1);
 //Soma o indice K e mantem o E
 LDE somaExp(LDE lista);
 //Subtrai o indice K e mantem o E
 LDE subPolinomios(LDE lista1, LDE lista2);
+//SOMA DUAS LISTAS DE POLINOMIO
+LDE somaPolinomios(LDE lista1, LDE lista2);
 //multiplica um polinômio por outro
 LDE produtoPolinomio(LDE lista1, LDE lista2);
 //substitui o valor de x, potencia esse valor pelo indice e para depois multiplicar por E
@@ -217,8 +219,8 @@ float sub(float k1, float k2)
     return aux;
 }
 
-void menu() 
-{
+void menu()
+{LDE somaPolinomios(LDE lista1, LDE lista2)
     LDE lista1, lista2, listaOP;
     inicializarLDE(lista1); inicializarLDE(lista2);
     int escolha = 0, xEscalar = 0, desejo = 0;
@@ -235,7 +237,7 @@ void menu()
     cout << "|                                                             |" << endl;
     cout << "+------------------------------------------------------------ +" << endl;
     Sleep(5000);
-    system("cls");
+    system("cls");LDE somaPolinomios(LDE lista1, LDE lista2);
 
     do
     {
@@ -256,9 +258,10 @@ void menu()
     switch (escolha)
     {
     case 1: //SOMA
-        lerPolinomioUmaLista(lista1);
-        mostrarLDE(lista1, "Polinomios a serem somados");
-        listaOP = somaExp(lista1);
+        lerPolinomioDuasListas(lista1, lista2);
+        mostrarLDE(lista1, "1o Polinomio soma");
+        mostrarLDE(lista2, "2o Polinomio soma");
+        listaOP = somaPolinomios(lista1, lista2);
         cout << endl;
         mostrarLDE(listaOP, "Resultado Soma");
         break;
@@ -369,10 +372,10 @@ void lerPolinomioUmaLista(LDE& lista)
         {
             cout << "+-------------------------------------------------------------+" << endl;
             cout << "|                         Atencao!                            |" << endl;
-            cout << "|        Coloque todos os monomios de ambos polinomios        |" << endl;
+            cout << "|        Coloque todos os monomios do Polinomio               |" << endl;
             cout << "|                         ou seja...                          |" << endl;
-            cout << "|        Se voce deseja  somar os seguintes polinomios:       |" << endl;
-            cout << "|              (7x^2 + 8^3 + 4)  + (4x^2 + 2x^3 - 2)          |" << endl;
+            cout << "|                                                             |" << endl;
+            cout << "|            Insira todos os monomios, um de cada vez,        |" << endl;
             cout << "|         Insira todos os monomios, um de cada vez,           |" << endl;
             cout << "|              independente da ordem e sinal!                 |" << endl;
             cout << "+------------------------------------------------------------ +" << endl;
@@ -589,7 +592,7 @@ LDE subPolinomios(LDE lista1, LDE lista2) {
             aux1 = aux1->eloP; // os auxiliares sempre e somente passarão para o eloP caso ocorra inserção na lista
             aux2 = aux2->eloP; // Neste caso ambos foram subtraidos e somados.
         }
-        else if (aux1->e < aux2->e) { // Se o expoente da lista1 for maior que o da lista2 ele somente será inserido
+        else if (aux1->e < aux2->e) { // Se o expoente da lista2 for maior que o da lista1 ele somente será inserido
             inserirLDE(resultado, aux1->k, aux1->e);
             aux1 = aux1->eloP;
         }
@@ -617,6 +620,55 @@ LDE subPolinomios(LDE lista1, LDE lista2) {
 
     return resultado;
 }
+
+LDE somaPolinomios(LDE lista1, LDE lista2) {
+    LDE resultado, lista1aux, lista2aux;
+    inicializarLDE(resultado);
+
+    lista1aux = somaExp(lista1);
+    lista2aux = somaExp(lista2);
+
+    No* aux1 = lista1aux.comeco;
+    No* aux2 = lista2aux.comeco;
+
+    while (aux1 != NULL && aux2 != NULL) { //percorrendo as duas listas simultaneamentes até que as duas estejam vazias
+        if (aux1->e == aux2->e) { // se os expoentes em ambas listas forem iguais
+            float novoK = soma(aux1->k, aux2->k); // as constantes serão subtraídas e armazenadas em novoK
+            if (novoK != 0) {
+                inserirLDE(resultado, novoK, aux1->e); //novoK é inserido como expoente na nova LDE
+            }
+            aux1 = aux1->eloP; // os auxiliares sempre e somente passarão para o eloP caso ocorra inserção na lista
+            aux2 = aux2->eloP; // Neste caso ambos foram subtraidos e somados.
+        }
+        else if (aux1->e < aux2->e) { // Se o expoente da lista2 for maior que o da lista1 ele somente será inserido
+            inserirLDE(resultado, aux1->k, aux1->e);
+            aux1 = aux1->eloP;
+        }
+        else {
+            float novoK = soma(0, aux2->k); // caso o expoente do item da lista 2 for maior o que será inserido, na prática, será o valor da lista 2 *-1
+            if (novoK != 0) {
+                inserirLDE(resultado, novoK, aux2->e);
+            }
+            aux2 = aux2->eloP;
+        }
+    }
+
+    while (aux1 != NULL) {
+        inserirLDE(resultado, aux1->k, aux1->e);
+        aux1 = aux1->eloP;
+    }
+
+    while (aux2 != NULL) {
+        float novoK = soma(0, aux2->k);
+        if (novoK != 0) {
+            inserirLDE(resultado, novoK, aux2->e);
+        }
+        aux2 = aux2->eloP;
+    }
+
+    return resultado;
+}
+
 
 LDE produtoPolinomio(LDE lista1, LDE lista2) {
     LDE novaLista, lista1aux, lista2aux;
