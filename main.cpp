@@ -120,6 +120,7 @@ void mostrarLDE(LDE lista, string frase)
 
         if (aux->k != 0)
         {
+            if( aux != lista.fim && aux->k > 0) cout << "+ ";
             if (aux->e == 0) cout << aux->k << " ";
             else if (aux->e == 1) cout << aux->k << "x ";
             else cout << aux->k << "x^" << aux->e << " ";
@@ -220,7 +221,7 @@ float sub(float k1, float k2)
 }
 
 void menu()
-{LDE somaPolinomios(LDE lista1, LDE lista2)
+{
     LDE lista1, lista2, listaOP;
     inicializarLDE(lista1); inicializarLDE(lista2);
     int escolha = 0, xEscalar = 0, desejo = 0;
@@ -237,8 +238,7 @@ void menu()
     cout << "|                                                             |" << endl;
     cout << "+------------------------------------------------------------ +" << endl;
     Sleep(5000);
-    system("cls");LDE somaPolinomios(LDE lista1, LDE lista2);
-
+    system("cls");
     do
     {
         cout << "+-------------------------------------------------------------+" << endl;
