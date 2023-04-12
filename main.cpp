@@ -35,7 +35,7 @@ float sub(float k1, float k2);
 // Função que executará o menu, dando opções ao usuário
 void menu();
 //Multiplica os indices K por uma constante !IMPORTANTE, ALTERA A PRÓPRIA LISTA.
-void multiplicarPorEscalar(LDE& lista, int x);
+void multiplicarPorEscalar(LDE& lista, float x);
 //Lê apenas uma lista de polinômios para escalar e valor numérico
 void lerPolinomioUmaLista(LDE& lista);
 //Lê duas listas para qualquer outro tipo de operação - soma, sub e multiplicação de polinomios
@@ -241,7 +241,7 @@ void menu()
         system("cls");
         lerPolinomioUmaLista(lista1);
         mostrarLDE(lista1, "Polinomio a ser multiplicado");
-        cout << "Escalar que irá multiplicar: " << xEscalar;
+        cout << "Escalar que ira multiplicar: " << xEscalar;
         multiplicarPorEscalar(lista1, xEscalar);
         cout << endl;
         mostrarLDE(lista1, "Resultado multiplicacao por escalar");
@@ -293,7 +293,7 @@ void menu()
     }
 }
 
-void multiplicarPorEscalar(LDE& lista, int x) {
+void multiplicarPorEscalar(LDE& lista, float x) {
     No* aux = lista.comeco;
 
     while (aux != NULL)
@@ -316,13 +316,13 @@ void lerPolinomioUmaLista(LDE& lista)
         if (cont == 0)
         {
             cout << "+-------------------------------------------------------------+" << endl;
-            cout << "|                         Atencao!                            |" << endl;
-            cout << "|        Coloque todos os monomios do Polinomio               |" << endl;
-            cout << "|                         ou seja...                          |" << endl;
             cout << "|                                                             |" << endl;
-            cout << "|            Insira todos os monomios, um de cada vez,        |" << endl;
-            cout << "|         Insira todos os monomios, um de cada vez,           |" << endl;
-            cout << "|              independente da ordem e sinal!                 |" << endl;
+            cout << "|                            Atencao!!                        |" << endl;
+            cout << "|                                                             |" << endl;
+            cout << "|                    Insira todos os monomios                 |" << endl;
+            cout << "|          Primeiro a sua constante e depois seu expoente     |" << endl;
+            cout << "|                  independente da ordem e sinal!             |" << endl;
+            cout << "|                                                             |" << endl;
             cout << "+------------------------------------------------------------ +" << endl;
             Sleep(5000);
             system("cls");
