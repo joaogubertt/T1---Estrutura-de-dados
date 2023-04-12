@@ -1,5 +1,4 @@
 #include <iostream>
-#include <locale.h>
 #include <string.h>
 #include <stdlib.h>
 #include <Windows.h>
@@ -35,13 +34,11 @@ float soma(float k1, float k2);
 float sub(float k1, float k2);
 // Função que executará o menu, dando opções ao usuário
 void menu();
-//potenciação simples
-float exponenciacao(float base, int expoente);
 //Multiplica os indices K por uma constante !IMPORTANTE, ALTERA A PRÓPRIA LISTA.
 void multiplicarPorEscalar(LDE& lista, int x);
-//Lê apenas uma lista de polinômios para soma, escalar e valor numérico
+//Lê apenas uma lista de polinômios para escalar e valor numérico
 void lerPolinomioUmaLista(LDE& lista);
-//Lê duas listas para qualquer outro tipo de operação - sub e multiplicação de polinomios
+//Lê duas listas para qualquer outro tipo de operação - soma, sub e multiplicação de polinomios
 void lerPolinomioDuasListas(LDE& lista, LDE& lista1);
 //Soma o indice K e mantem o E
 LDE somaExp(LDE lista);
@@ -55,55 +52,11 @@ LDE produtoPolinomio(LDE lista1, LDE lista2);
 float valorNumerico(LDE lista, float x);
 
 int main() {
-    setlocale(LC_ALL, "Portuguese");
-    /*
-    LDE lista1, lista, lista2, lista3, listaSUB;
-    float valNum;
-    //INICIALIZANDO TODAS AS LISTAS QUE NECESSITAM DE INICIALIZAÇÃO
-    inicializarLDE(lista); inicializarLDE(lista1); inicializarLDE(lista2); inicializarLDE(lista3);
-    //CHAMA FUNÇÃO QUE IRÁ INSERIR EM LISTA OS POLINÔMIOS - PARA SOMA
-     //lerPolinomioUmaLista(lista); //descomentar
-     //mostrarLDE(lista, "Polinomios a serem somados");
-     //listaSOMA = somaExp(lista);
-     //mostrarLDE(listaSOMA, "Polinomio Somado:");
-    cout << endl;
-    // multiplicarPorEscalar(lista, 2);
-    mostrarLDE(lista, "Multiplicacao por escalar");
-    //lerPolinomioDuasListas(lista2, lista3);
-    mostrarLDE(lista2, "1o Polinomio sub");
-    mostrarLDE(lista3, "2o Polinomio sub");
-    //listaSUB = subPolinomios(lista2, lista3);
-    listaSUB = produtoPolinomio(lista2, lista3);
-    mostrarLDE(listaSUB, "Resultado subtraido");
-    cout << endl;
-    //valnum = valorNumerico(lista, 2.0);
-    //cout << endl << "Valor numerico = " << valnum;
-    inserirLDE(lista1, 2, 2);
-    inserirLDE(lista1, 3, 3);
-    valNum = valorNumerico(lista1, 2);
-    cout << "Valor numérico do polinomio: " << valNum << endl; */
     menu();
 
     return 0;
 }
 
-
-//SOMA
-//inserirLDE(lista, 2, 2);
-//inserirLDE(lista, -3, 1);
-//inserirLDE(lista, -1, 0);
-//inserirLDE(lista, -3, 2);
-//inserirLDE(lista, 8, 1);
-//inserirLDE(lista, -6, 0);
-
-/*SUB
-inserirLDE(lista2, 5, 2);
-inserirLDE(lista2, -9, 1);
-inserirLDE(lista2, -8, 0);
-inserirLDE(lista2, -3, 2);
-inserirLDE(lista3, -3, 2);
-inserirLDE(lista3, 8, 1);
-inserirLDE(lista3, -6, 0);*/
 
 void inicializarLDE(LDE& lista) {
     lista.comeco = NULL;
@@ -338,14 +291,6 @@ void menu()
         system("cls");
         menu();
     }
-}
-
-float exponenciacao(float base, int expoente) {
-    float resultado = 1;
-    for (int i = 0; i < expoente; i++) {
-        resultado *= base;
-    }
-    return resultado;
 }
 
 void multiplicarPorEscalar(LDE& lista, int x) {
