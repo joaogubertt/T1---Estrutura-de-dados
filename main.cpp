@@ -35,7 +35,7 @@ float sub(float k1, float k2);
 // Função que executará o menu, dando opções ao usuário
 void menu();
 //Multiplica os indices K por uma constante !IMPORTANTE, ALTERA A PRÓPRIA LISTA.
-void multiplicarPorEscalar(LDE& lista, float x);
+LDE multiplicarPorEscalar(LDE& lista, float x);
 //Lê apenas uma lista de polinômios para escalar e valor numérico
 void lerPolinomioUmaLista(LDE& lista);
 //Lê duas listas para qualquer outro tipo de operação - soma, sub e multiplicação de polinomios
@@ -177,8 +177,8 @@ void menu()
 {
     LDE lista1, lista2, listaOP;
     inicializarLDE(lista1); inicializarLDE(lista2);
-    int escolha = 0, xEscalar = 0, desejo = 0;
-    float valNum = 0, vNEscolha = 0;
+    int escolha = 0, desejo = 0;
+    float valNum = 0, vNEscolha = 0, xEscalar = 0;
 
     cout << "+-------------------------------------------------------------+" << endl;
     cout << "|                                                             |" << endl;
@@ -242,9 +242,9 @@ void menu()
         lerPolinomioUmaLista(lista1);
         mostrarLDE(lista1, "Polinomio a ser multiplicado");
         cout << "Escalar que ira multiplicar: " << xEscalar;
-        multiplicarPorEscalar(lista1, xEscalar);
+        listaOP = multiplicarPorEscalar(lista1, xEscalar);
         cout << endl;
-        mostrarLDE(lista1, "Resultado multiplicacao por escalar");
+        mostrarLDE(listaOP, "Resultado multiplicacao por escalar");
         break;
     case 4: // VALOR NUMERICO
         cout << "+-------------------------------------------------------------+" << endl;
@@ -293,18 +293,23 @@ void menu()
     }
 }
 
-void multiplicarPorEscalar(LDE& lista, float x) {
+
+LDE multiplicarPorEscalar(LDE& lista, float x) 
+{
+    LDE resultado;
+    inicializarLDE(resultado);
     No* aux = lista.comeco;
 
     while (aux != NULL)
     {
-        if (aux->e != 0)
-        {
-            aux->k *= x;
-            aux = aux->eloP;
-        }
+        float novoK = aux->k * x;
+        inserirNoFim(resultado, novoK, aux->e);
+        aux = aux->eloP;
     }
+
+    return resultado;
 }
+
 
 void lerPolinomioUmaLista(LDE& lista)
 {
